@@ -9,6 +9,7 @@ import {
   Bot
 } from 'lucide-react';
 import { StudentRecord } from '../data/uciStudents';
+import { generateDetailedEduMentorResponse, cleanTextFormatting } from '../services/aiMentorKnowledgeEngine';
 
 interface Message {
   id: string;
@@ -251,43 +252,43 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
       });
 
       if (res.ok) {
-        const data = await res.json();
-        const mentorMsg: Message = {
-          id: `m-${Date.now()}`,
-          sender: 'mentor',
-          text: data.content,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          isDistressEscalation: data.isDistressEscalation,
-        };
-        setMessages(prev => [...prev, mentorMsg]);
-      } else {
-        throw new Error('API response failed');
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data && data.content) {
+            const mentorMsg: Message = {
+              id: `m-${Date.now()}`,
+              sender: 'mentor',
+              text: cleanTextFormatting(data.content),
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              isDistressEscalation: Boolean(data.isDistressEscalation),
+            };
+            setMessages(prev => [...prev, mentorMsg]);
+            return;
+          }
+        }
       }
+      throw new Error('API response failed');
     } catch {
-      // Dynamic client fallback with clean emojis and zero # or *
-      const lower = textToSend.toLowerCase();
-      let dynamicReply = `Hello ${selectedStudent?.name || 'there'}! 👋 I am EduMentor AI.\n\n`;
-
-      if (/^(hi|hello|hey|namaste)/.test(lower)) {
-        dynamicReply += `How can I help you excel in your studies today? You can ask me about study schedules, exam preparation, AICTE attendance cutoff, programming concepts, or scholarship guidance!`;
-      } else if (lower.includes('python') || lower.includes('code') || lower.includes('programming') || lower.includes('dsa') || lower.includes('java')) {
-        dynamicReply += `💻 Programming & Coding Guidance:\n\n1. Core Practice: Dedicate 45 minutes daily to write code rather than just reading syntax.\n2. Data Structures: Focus on Arrays, HashMaps, and Linked Lists on platforms like LeetCode or HackerRank.\n3. Practical Projects: Build a functional project (e.g., student grade analyzer or web dashboard) to cement concepts.`;
-      } else if (lower.includes('timetable') || lower.includes('schedule') || lower.includes('backlog') || lower.includes('exam')) {
-        dynamicReply += `📅 4-Week Exam Recovery Strategy:\n\n1. Week 1 - High-Yield Chapters: Audit previous 3-year question papers (PYQs) to locate recurring 60% mark topics.\n2. Week 2 - 90-min Daily Deep Work: Study tough subjects between 5:00 PM – 6:30 PM with zero phone distraction.\n3. Week 3 - Doubt Resolution: Meet your subject professor or proctor during office hours with solved steps.\n4. Week 4 - Mock Testing: Attempt full timed papers to master exam pacing.`;
-      } else if (lower.includes('attendance') || lower.includes('cutoff') || lower.includes('75%')) {
-        dynamicReply += `📊 Attendance Compliance Strategy:\n\nUnder AICTE norms, maintaining at least 75% attendance is required to qualify for semester examinations. Attending all lectures consistently over the next 3 weeks will boost your cumulative score by 6%–9%. If you faced health issues, submit an authorized medical leave certificate to your HOD immediately.`;
-      } else if (lower.includes('scholarship') || lower.includes('fee') || lower.includes('tuition')) {
-        dynamicReply += `💰 Financial Support Channels:\n\n1. National Scholarship Portal (scholarships.gov.in) for Central Sector and Post-Matric schemes.\n2. AICTE Pragati & Saksham Schemes for eligible female and differently-abled technical students.\n3. College Emergency Aid: Request a 3-part tuition installment plan or book bank grants from the Dean of Student Affairs.`;
-      } else if (lower.includes('stress') || lower.includes('anxiety') || lower.includes('overwhelm')) {
-        dynamicReply += `🌿 Calm & Wellness Guidance:\n\nPlease remember that one challenging term does not define your future. Break your syllabus down into small 20-minute study blocks. Don't hesitate to reach out to your faculty mentor, or call the 24/7 Tele-MANAS helpline at 14416 for confidential mental wellness support.`;
-      } else {
-        dynamicReply += `💡 Strategy for "${textToSend.replace(/[*_`#]/g, '')}":\n\n1. Clarify Key Concepts: Break this topic into 2 to 3 core definitions and practical examples.\n2. Targeted Revision: Review textbook archetypes and practice previous question papers.\n3. Proctor Collaboration: Connect with your faculty mentor or study cohort for personalized review.`;
-      }
+      // Dynamic Rich Knowledge Engine (guarantees identical in-depth, structured answers anywhere: local, deployed on Vercel, or offline)
+      const dynamicReply = generateDetailedEduMentorResponse(
+        textToSend,
+        selectedStudent?.name || 'Student',
+        selectedStudent ? {
+          name: selectedStudent.name,
+          riskScore: selectedStudent.riskScore,
+          riskLevel: selectedStudent.riskLevel,
+          attendance: selectedStudent.attendanceRate,
+          course: selectedStudent.course,
+          semester: selectedStudent.semester,
+          topReasons: selectedStudent.topFactors,
+        } : undefined
+      );
 
       const fallbackMsg: Message = {
         id: `m-${Date.now()}`,
         sender: 'mentor',
-        text: dynamicReply,
+        text: cleanTextFormatting(dynamicReply),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages(prev => [...prev, fallbackMsg]);
