@@ -1,151 +1,176 @@
 # EduMentor AI — Student Dropout Prevention & Smart Learning Assistant 🎓🚀
 
-An AI/ML-powered Early-Warning & Student Retention Intelligence Platform built with **React 19**, **Express**, **Tailwind CSS v4**, and **Google Gemini AI**.
-
-It enables institutions, counselors, and students to predict dropout risk early, understand risk factors through SHAP-inspired explainability, simulate academic interventions with a What-If engine, chat with a bilingual AI Mentor (Hindi & English), and allow students to register and manage their own academic records.
+**EduMentor AI** is a production-grade, AI-driven Early-Warning Student Retention & Academic Mentorship Platform. It empowers higher-education institutions, academic deans, faculty proctors, and students to predict dropout risks early, understand root causes via Explainable AI (SHAP factors), simulate remedial interventions in real-time, and chat with an intelligent academic mentor.
 
 ---
 
-## 📌 Key Features
+## 🌟 Key Capabilities & Highlights
 
-1. **📊 Executive Overview & Analytics**:
-   - Institutional dropout risk metrics (High / Medium / Low Risk distribution).
-   - Interactive trend charts with Monthly (Aug, Sep, Oct, Nov, Dec, Jan) and Weekly timeline toggle.
-   - Key dropout driver breakdowns (Attendance, Academic performance, Fee clearance, Distance, Backlogs).
+### 1. 📊 Institutional Executive Dashboard & Analytics
+- **Macro Risk Tiers**: Instant visibility across institutional cohorts into High Risk, Medium Risk, and Low Risk student populations.
+- **Interactive Timeline Trends**: Dynamic trend graphs toggleable between **Weekly** and **Monthly** intervals (August through January) to monitor risk reduction over the academic semester.
+- **Key Attrition Drivers**: Granular breakdown of leading causes of academic distress—including Attendance Shortfalls (<75% AICTE cutoff), Academic Performance / SGPA drop, Tuition Fee Arrears, and Travel Distance / Commute challenges.
 
-2. **📋 At-Risk Student Roster**:
-   - Comprehensive roster of enrolled students with real-time risk scores and category tags.
-   - Search by name, roll number, or department.
-   - Filter by risk tier (All, High Risk, Medium, Low) and branch (CSE, ECE, ME, etc.).
-   - Quick export to CSV for administrative reporting.
+### 2. 📋 At-Risk Student Roster & Cohort Management
+- **Smart Filtering & Search**: Filter students by risk level (High / Medium / Low), branch/department (CSE, ECE, ME, Civil, AI & DS), or search directly by Student Name or University Roll Number.
+- **CSV Data Export**: One-click administrative report export for proctorial boards and academic committees.
+- **Direct Student Actions**: One-click access to open a student's profile or initiate an AI proctoring dialogue.
 
-3. **👤 Student Profile & What-If Risk Simulator**:
-   - Detailed individual breakdown with attendance gauges, SGPA/CGPA history, and fee clearance status.
-   - **Explainable AI (SHAP factors)** highlighting positive and negative drivers influencing risk.
-   - **Interactive What-If Simulation**: Adjust attendance, study hours, or backlog status via sliders to see real-time recalculated dropout risk percentage.
-   - **Log Counseling Intervention**: Document counselor notes, remedial plans, and status tracking without text cutoff bugs.
+### 3. 👤 Deep-Dive Student Profile & What-If Risk Simulator
+- **Comprehensive Academic Dossier**: Historical SGPA / CGPA, verified attendance percentage, backlog count, fee status, and scholarship tags.
+- **Explainable AI (SHAP-inspired Factor Decomposition)**: Transparently highlights top positive factors (protective drivers) and negative factors (risk drivers) determining each student's risk profile.
+- **Interactive What-If Simulation Engine**: Sliders allow faculty to adjust hypothetical parameters (attendance rate, completed credits, SGPA target, fee payment status) and witness instant recalculation of predicted dropout probability.
+- **Counseling Intervention Logger**: Document counseling notes, assigned remedial classes, and financial assistance with full status tracking.
 
-4. **✨ Self-Registration & Personal Student Login (`+ Add / Register My Record`)**:
-   - Students can self-register their academic and financial details directly.
-   - Calculates instant Machine Learning dropout risk upon submission.
-   - Automatically switches user role to **Student** and logs them in with their personal name, avatar initials, and student record view.
-   - Saves record locally to `localStorage` so data persists across refreshes.
+### 4. 📝 Student Self-Registration & Personal Login (`+ Add / Register My Record`)
+- Enables students to self-enroll by entering their current academic, financial, and personal details.
+- Runs an instant Machine Learning risk score calculation upon submission.
+- Automatically transitions the active session to **Student Role**, logging them in under their personal name, displaying their initials on the profile badge, and rendering their personalized dashboard.
+- Saves records to local browser storage (`localStorage`) to persist data across page refreshes.
 
-5. **🤖 Bilingual AI Mentor (EduMentor AI)**:
-   - AI conversational mentor powered by Gemini API.
-   - Supports counseling in English and Hindi (Hinglish).
-   - Provides personalized academic recovery schedules, mental health coping mechanisms, and scholarship information.
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 19, TypeScript, Tailwind CSS v4, Lucide Icons, Motion (Framer Motion)
-- **Backend / Server**: Node.js, Express, tsx
-- **AI / LLM**: `@google/genai` (Google Gemini API)
-- **Bundler**: Vite 6+
+### 5. 🤖 Bilingual AI Academic Mentor (EduMentor AI)
+- Conversational study assistant powered by the Google Gemini API (`@google/genai`).
+- Bilingual counseling support in **English** and **Hindi / Hinglish**.
+- Delivers customized 4-week exam recovery schedules, coding & DSA study roadmaps, AICTE 75% attendance policy guidance, scholarship opportunities, and stress-management support.
+- Automatic distress detection that escalates to human proctors and confidential helplines (such as Tele-MANAS).
 
 ---
 
-## 🚀 Getting Started / Kaise Run Karein (Step-by-Step Guide)
+## 🛠️ Technology Stack
 
-### 1. Prerequisites (Pehle ye ensure karein)
-- **Node.js**: Version 18+ ya 20+ installed hona chahiye (`node -v` se check karein).
-- **npm** ya **bun**: Package manager installed hona chahiye (`npm -v`).
-- **Gemini API Key**: Google AI Studio se free Gemini API Key prapt karein (AI Mentor feature ke liye).
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 19, TypeScript, Tailwind CSS v4, Lucide Icons, Motion (Framer Motion) |
+| **Backend** | Node.js, Express, tsx |
+| **AI / Machine Learning** | `@google/genai` (Google Gemini Flash), Client-Side Surrogate ML Prediction Engine |
+| **Build Tool & Bundler** | Vite 6 / Vite 8 |
+| **Deployment Platforms** | Vercel, Render, Railway, Google Cloud Run |
 
 ---
 
-### 2. Installation (Dependencies install karna)
+## ⚡ Deployment to Vercel (One-Click / Step-by-Step)
 
-Repository clone ya download karne ke baad project folder ke andar terminal open karein:
+This project is pre-configured for seamless deployment to **Vercel**:
+
+### Why Vercel Deployments Previously Failed:
+- In strict npm environments, conflicting peer dependencies between `esbuild` and `vite` caused `npm error code ERESOLVE`.
+- **Solution applied**: Conflicting peer packages were removed, `.npmrc` is configured with `legacy-peer-deps=true`, and `vercel.json` provides automated SPA routing.
+
+### Steps to Deploy on Vercel:
+
+1. **Push to GitHub**:
+   Commit and push this repository to your GitHub account.
+
+2. **Import to Vercel**:
+   - Go to [vercel.com](https://vercel.com) and log in.
+   - Click **"Add New..."** > **"Project"**.
+   - Select your GitHub repository.
+
+3. **Configure Project Settings on Vercel**:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `./` (leave default)
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install` (or leave default; `.npmrc` ensures clean resolution)
+
+4. **Environment Variables (Optional)**:
+   - In the Vercel project configuration, add:
+     - `GEMINI_API_KEY`: *(Your Google AI Studio API key)*
+   > **Note**: Even without an API key, the platform operates seamlessly using its built-in client-side surrogate predictive engine and intelligent fallbacks.
+
+5. **Deploy**:
+   Click **Deploy**. Your live URL will be ready in under 1 minute!
+
+---
+
+## 💻 Running Locally
+
+### 1. Prerequisites
+- **Node.js**: v18.0.0 or higher (`node -v`)
+- **npm** or **bun**: (`npm -v`)
+
+### 2. Clone and Install Dependencies
 
 ```bash
-# Dependencies install karein
+# Clone the repository
+git clone <your-repository-url>
+cd <repository-directory>
+
+# Install packages
 npm install
 ```
 
----
+### 3. Environment Setup
 
-### 3. Environment Variables Setup (`.env`)
-
-Root folder me ek `.env` file banayein (`.env.example` ko copy karke):
+Create a `.env` file in the root directory:
 
 ```bash
 cp .env.example .env
 ```
 
-`.env` file me apni Google Gemini API Key add karein:
+Add your Gemini API Key inside `.env`:
 
 ```env
-GEMINI_API_KEY=your_actual_gemini_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 PORT=3000
 ```
 
-> **Note**: Agar Gemini API key nahi bhi dali hai, tab bhi basic application, ML dropout prediction calculations, roster, self-registration aur graphs poori tarah kaam karenge. AI Mentor chat ke liye key zaroori hai.
-
----
-
-### 4. Run Development Server (App start karna)
-
-Development server ko start karne ke liye ye command chalayein:
+### 4. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-Server start hone ke baad browser me open karein:
+Open your browser and navigate to:
 👉 **`http://localhost:3000`**
 
----
-
-### 5. Production Build (Deploy karne ke liye)
-
-Production build generate karne ke liye:
+### 5. Build for Production
 
 ```bash
-# Build React bundle
+# Build the optimized production bundle
 npm run build
 
-# Start production server
+# Start the Node.js production server
 npm start
 ```
 
 ---
 
-## 📁 Project Structure (Folder Structure)
+## 📂 Project Architecture
 
 ```text
+├── .npmrc                         # Configures npm legacy-peer-deps for Vercel builds
+├── vercel.json                    # Vercel deployment & SPA rewrite routing
+├── server.ts                      # Express API server (Gemini AI endpoints & static hosting)
+├── vite.config.ts                 # Vite bundler & Tailwind configuration
+├── package.json                   # Project scripts and dependencies
 ├── src/
 │   ├── components/
-│   │   ├── AddStudentRecordModal.tsx   # Student self-registration & ML risk modal
-│   │   ├── AtRiskRosterView.tsx        # At-risk students roster & search/filter
-│   │   ├── Header.tsx                  # Top navigation bar with EduMentor AI branding
-│   │   ├── MentorChatModal.tsx         # AI Mentor conversational chat interface
-│   │   ├── OverviewView.tsx            # Analytics dashboard & interactive trend charts
-│   │   └── StudentProfileView.tsx      # Student profile, SHAP factors & What-If simulator
+│   │   ├── AddStudentRecordModal.tsx   # Self-registration modal with instant ML scoring
+│   │   ├── AIMentorChatView.tsx        # EduMentor AI chat dialog with bilingual support
+│   │   ├── AtRiskRosterView.tsx        # High-risk cohort table, search & CSV export
+│   │   ├── Header.tsx                  # Top branding bar with role switcher
+│   │   ├── MentorChatModal.tsx         # Quick popup mentor interaction
+│   │   ├── OverviewView.tsx            # Institutional analytics & risk distribution charts
+│   │   └── StudentProfileView.tsx      # Student dossier, SHAP factors & What-If simulator
 │   ├── data/
-│   │   └── uciStudents.ts              # Pre-seeded student records & UCI dataset factors
-│   ├── App.tsx                         # Main app routing, state & sidebar profile manager
-│   ├── main.tsx                        # React DOM root entry point
-│   └── index.css                       # Global Tailwind CSS directives
-├── server.ts                           # Express server + Gemini AI endpoints + Vite middleware
-├── package.json                        # Scripts and dependencies
-├── vite.config.ts                      # Vite configuration
-└── README.md                           # Documentation & guide
+│   │   ├── uciStudents.ts              # Pre-populated student records and risk metadata
+│   │   └── modulesContent.ts           # Academic curriculum reference data
+│   ├── App.tsx                         # Core application router, state & sidebar manager
+│   ├── main.tsx                        # React 19 application mount point
+│   └── index.css                       # Tailwind CSS v4 styling rules
+└── README.md                           # Documentation and deployment manual
 ```
 
 ---
 
-## 💡 Quick Tips & Workflow
+## 👥 User Roles & Personas
 
-- **Sidebar Role Switcher**: Top-left sidebar me jakar aap role switch kar sakte hain:
-  - `Dean / Administrator`: Institutional overview and macro analytics.
-  - `Counselor / Faculty`: Focuses on at-risk rosters and student counseling interventions.
-  - `Student`: Personalized view for student's own risk profile and AI mentor support.
-- **Add New Student**: Click on **`+ Add / Register My Record`** (sidebar ya top-right buttons me) to fill student details, predict risk, aur apna personal login create karein!
+- **Dean / Institutional Administrator**: Provides aggregate dropout telemetry, semester retention trends, and department-level comparisons.
+- **Counselor / Faculty Proctor**: Accesses prioritized at-risk rosters, logs counseling interventions, and runs What-If simulations to structure remedial plans.
+- **Student**: Accesses personalized academic status, reviews attendance and credit clearance, experiments with What-If scenarios, and engages with EduMentor AI for guidance.
 
 ---
 
-## 📜 License
-MIT License. Created for AICTE-IBM Bharat Cares Educational Initiatives.
+## 📄 License
+MIT License. Built for student retention excellence and educational empowerment.
