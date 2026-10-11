@@ -325,11 +325,14 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
   };
 
   const quickPrompts = [
-    'Create a 1-week study timetable to cover my upcoming syllabus',
+    'How can I improve my academic performance and avoid failing my exams?',
+    'Create a 1-week study plan to prepare for my upcoming exams',
+    'Create a 4-week study timetable to clear my 2 pending backlogs',
+    'I have low attendance. How can I improve it and avoid academic problems?',
+    'I am thinking of dropping out of college because of financial problems. What should I do?',
+    'Which government scholarships are available for college students in India?',
+    'I feel stressed and demotivated because of my studies. Can you create a daily study routine to help me succeed?',
     'Explain how to learn coding from scratch with a roadmap',
-    'Which government scholarships can help pay my unpaid college tuition fees?',
-    'How do I calculate if my attendance will reach 75% cutoff?',
-    'Explain Object-Oriented Programming (OOP) with clean examples',
   ];
 
   return (
