@@ -1,0 +1,8 @@
+{
+  "name": "Remix Bharat Cares: AI Student Dropout Early-Warning \u0026 Mentor System",
+  "description": "AICTE-IBM Bharat Cares project featuring ML early-warning dropout risk scoring, SHAP explainability, what-if simulator, Hindi/English AI Mentor, and complete student internship codebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
