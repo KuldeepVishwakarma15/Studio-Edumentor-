@@ -6,7 +6,8 @@ import {
   PhoneCall, 
   GraduationCap, 
   UserCheck,
-  Bot
+  Bot,
+  Key
 } from 'lucide-react';
 import { StudentRecord } from '../data/uciStudents';
 import { generateDetailedEduMentorResponse, cleanTextFormatting } from '../services/aiMentorKnowledgeEngine';
@@ -206,6 +207,16 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [clientApiKey, setClientApiKey] = useState(() => {
+    try {
+      return localStorage.getItem('edumentor_gemini_api_key') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [tempKeyInput, setTempKeyInput] = useState('');
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -213,6 +224,21 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  const handleSaveApiKey = () => {
+    const trimmed = tempKeyInput.trim();
+    setClientApiKey(trimmed);
+    try {
+      if (trimmed) {
+        localStorage.setItem('edumentor_gemini_api_key', trimmed);
+      } else {
+        localStorage.removeItem('edumentor_gemini_api_key');
+      }
+    } catch {
+      // ignore
+    }
+    setShowKeyModal(false);
+  };
 
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputMessage;
@@ -233,6 +259,7 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
       const payload = {
         message: textToSend,
         language: 'en',
+        clientApiKey: clientApiKey || undefined,
         history: messages.map(m => ({ sender: m.sender, text: m.text })).slice(-8),
         studentContext: selectedStudent ? {
           name: selectedStudent.name,
@@ -270,7 +297,7 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
       }
       throw new Error('API response failed');
     } catch {
-      // Dynamic Rich Knowledge Engine (guarantees identical in-depth, structured answers anywhere: local, deployed on Vercel, or offline)
+      // Smart Knowledge Engine (answers every question accurately & concisely)
       const dynamicReply = generateDetailedEduMentorResponse(
         textToSend,
         selectedStudent?.name || 'Student',
@@ -298,15 +325,15 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
   };
 
   const quickPrompts = [
-    'Create a 4-week study timetable to clear my 2 pending backlogs',
-    'I feel overwhelmed by syllabus and fear failing next semester',
+    'Create a 1-week study timetable to cover my upcoming syllabus',
+    'Explain how to learn coding from scratch with a roadmap',
     'Which government scholarships can help pay my unpaid college tuition fees?',
-    'How do I schedule a proctor meeting to review my attendance cutoff?',
-    'Explain Python Object-Oriented Programming with clean examples',
+    'How do I calculate if my attendance will reach 75% cutoff?',
+    'Explain Object-Oriented Programming (OOP) with clean examples',
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm flex flex-col h-[750px] overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm flex flex-col h-[750px] overflow-hidden transition-colors relative">
       
       {/* Mentor Header: Prompts 5 & 6 exact specifications */}
       <div className="bg-slate-50 dark:bg-slate-900 px-5 py-3.5 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors">
@@ -334,7 +361,7 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
           </div>
         </div>
 
-        {/* Right side: Student Context Badge */}
+        {/* Right side: Student Context Badge & Optional Gemini Key Trigger */}
         <div className="flex items-center gap-2 flex-wrap">
           {selectedStudent ? (
             <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 px-2.5 py-1 rounded-xl text-xs">
@@ -355,8 +382,68 @@ export const AIMentorChatView: React.FC<AIMentorChatViewProps> = ({
               <span>General Academic Advisor Mode</span>
             </span>
           )}
+
+          <button
+            onClick={() => {
+              setTempKeyInput(clientApiKey);
+              setShowKeyModal(true);
+            }}
+            className={`text-xs px-2.5 py-1 rounded-xl border flex items-center gap-1.5 transition-all ${
+              clientApiKey
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 font-medium'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+            title="Configure Gemini API Key (Optional for Vercel deployment)"
+          >
+            <Key className="w-3 h-3 text-indigo-500" />
+            <span>{clientApiKey ? 'Gemini Active' : 'AI Key'}</span>
+          </button>
         </div>
       </div>
+
+      {/* Optional Gemini Key Modal */}
+      {showKeyModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Key className="w-4 h-4 text-indigo-500" />
+                Google Gemini API Key (Optional)
+              </h4>
+              <button
+                onClick={() => setShowKeyModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-sm"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-300 mb-3 leading-relaxed">
+              EduMentor AI answers all questions accurately out-of-the-box. When deployed to Vercel, you can optionally paste your free Google Gemini API Key here to enable live Gemini AI.
+            </p>
+            <input
+              type="password"
+              value={tempKeyInput}
+              onChange={(e) => setTempKeyInput(e.target.value)}
+              placeholder="Paste AIzaSy... (or leave blank for built-in AI)"
+              className="w-full text-xs font-mono px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={() => setShowKeyModal(false)}
+                className="px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveApiKey}
+                className="px-4 py-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-xs"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-slate-50/50 dark:bg-transparent">

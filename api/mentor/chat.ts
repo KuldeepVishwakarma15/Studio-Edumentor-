@@ -49,8 +49,8 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    // 2. Try Gemini API if GEMINI_API_KEY is configured in Vercel environment variables
-    const apiKey = (process.env.GEMINI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
+    // 2. Try Gemini API if GEMINI_API_KEY is configured in Vercel environment variables or passed by client
+    const apiKey = (req.body?.clientApiKey || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
     if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
       try {
         const ai = new GoogleGenAI({
@@ -60,17 +60,20 @@ export default async function handler(req: any, res: any) {
           }
         });
 
-        const systemInstruction = `You are EduMentor AI — an expert, highly encouraging academic mentor, student dropout prevention counselor, and comprehensive university learning advisor.
+        const systemInstruction = `You are EduMentor AI — an expert academic mentor and university learning advisor.
 Student Name: ${studentName}
 Course: ${course}
 Risk Level: ${riskLevel} (${riskScore}%)
 Attendance: ${attendance}%
 
-FORMATTING REQUIREMENTS:
-1. Never use markdown header hash '#' tags.
-2. Never use '*' for bullets. Use clean emojis like 📌, 💡, ⚙️, 💻, 🚀, 🎯, 🔹, 👉.
-3. For numbered steps use 1️⃣, 2️⃣, 3️⃣ or 1., 2., 3.
-4. Give a deep, thorough, structured, multi-section response explaining concepts clearly with code, formulas, or step-by-step logic.`;
+CORE GUIDELINES:
+1. Answer the student's exact question directly and accurately.
+2. Keep the answer concise, sharp, and easy to read (chhota aur point-to-point accurate). Avoid unnecessary filler.
+3. If asked for a study plan, design it specifically for the requested timeframe (e.g., 1-day, 1-week, 2-week).
+4. For programming, provide clean runnable code snippets with a brief 2-line explanation.
+5. For math, provide the exact calculation and clear steps.
+6. Never use markdown header hash '#' tags.
+7. Use clean emojis like 📌, 💡, 💻, 🎯, 🔹, 👉 and numbered lists 1️⃣, 2️⃣, 3️⃣.`;
 
         const contentsPayload: any[] = [];
         if (Array.isArray(history) && history.length > 0) {

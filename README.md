@@ -73,10 +73,10 @@ This project is pre-configured for seamless deployment to **Vercel**:
    - **Output Directory**: `dist`
    - **Install Command**: `npm install` (or leave default; `.npmrc` ensures clean resolution)
 
-4. **Environment Variables (Optional)**:
-   - In the Vercel project configuration, add:
-     - `GEMINI_API_KEY`: *(Your Google AI Studio API key)*
-   > **Note**: Even without an API key, the platform operates seamlessly using its built-in client-side surrogate predictive engine and intelligent fallbacks.
+4. **Environment Variables (Optional for Live Gemini AI)**:
+   - In Vercel Project Settings > **Environment Variables**, add:
+     - `GEMINI_API_KEY`: *(Your Google AI Studio Gemini API key)*
+   > **Note**: Even without configuring an API key on Vercel, EduMentor AI works instantly using its built-in Intelligent Q&A Engine. You can also paste your Gemini API Key directly inside the app using the **"AI Key"** button in the chat header!
 
 5. **Deploy**:
    Click **Deploy**. Your live URL will be ready in under 1 minute!

@@ -251,12 +251,13 @@ CRITICAL FORMATTING RULES (STRICTLY REQUIRED):
    🔹 or 👉 or ✅ or ⚡
 5. For numbered points, use clean numbered steps like:
    1️⃣, 2️⃣, 3️⃣ or 1., 2., 3.
-6. Answer ANY question asked by the student thoroughly, accurately, and clearly like ChatGPT. Whether they ask about programming (Python, Java, DSA, Web, etc.), mathematics, physics, engineering subjects, semester exam preparation, clearing backlogs, AICTE 75% attendance rules, scholarships, career guidance, study timetables, or general knowledge, provide a rich, structured, step-by-step, engaging response.
-7. Use emojis generously to make answers pleasant, lively, and easy to read.
+6. Answer the student's exact question directly and accurately. Keep answers concise, high-impact, and easy to read (chhota aur point-to-point accurate). Avoid unnecessary repetitive filler.
+7. If asked for a study plan, design it specifically for the requested timeframe (e.g., 1-day, 1-week, 2-week).
+8. Use emojis generously to make answers pleasant, lively, and easy to read.
 `.trim();
 
   // 1. Attempt Gemini models (gemini-3.1-flash-lite & gemini-3.8-flash with fallback)
-  const apiKey = (process.env.GEMINI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
+  const apiKey = (req.body?.clientApiKey || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
   if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
     const modelsToTry = ['gemini-3.1-flash-lite', 'gemini-3.8-flash'];
     
